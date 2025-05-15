@@ -148,3 +148,80 @@ poco("androidx.recyclerview.widget.RecyclerView").swipe([0.8039, -0.0014])
 poco("androidx.recyclerview.widget.RecyclerView").swipe([0.7203, 0.0043])
 
 
+touch(Template(r"tpl1746526519540.png", record_pos=(-0.193, -0.667), resolution=(1080, 2400)))
+
+#指定金额
+poco("com.wemew.teapro:id/et_1").click()
+#比例
+poco("com.wemew.teapro:id/et_3").click()
+
+poco("com.wemew.teapro:id/et_remark").click()
+poco("com.wemew.teapro:id/et_1").click()
+poco("com.wemew.teapro:id/tv_save_wine").click()
+poco(text="转台").click()
+poco("android.widget.FrameLayout").child("android.widget.LinearLayout").offspring("android:id/content").child("android.widget.FrameLayout").child("android.widget.FrameLayout").child("android.widget.LinearLayout").offspring("com.wemew.teapro:id/recycler_view_tab").child("android.widget.FrameLayout")[0].offspring("com.wemew.teapro:id/ll_grey_block_root").click()
+poco("com.wemew.teapro:id/tv_next").click()
+
+
+poco(text="M2[9527转]").click()
+
+poco(text="M2").swipe([0.0, -0.0014])
+
+poco("com.wemew.teapro:id/tv_pay_free").click()
+
+poco("com.wemew.teapro:id/tv_select_table").click()
+poco("android.widget.FrameLayout").offspring("com.wemew.teapro:id/recycle_table").child("android.widget.FrameLayout")[0].offspring("com.wemew.teapro:id/ll_red_block_root").click()
+
+poco("com.wemew.teapro:id/et_input_price").click()
+
+poco("com.wemew.teapro:id/et_input_remark").click()
+
+poco("com.wemew.teapro:id/tv_pay_free").click()
+poco(text="auto支付").click()
+poco("com.wemew.teapro:id/tv_pay_free").click()
+poco("com.wemew.teapro:id/tv_pay_free").click()
+
+
+poco(text="auto支付").click()
+poco(text="现金支付").click()
+poco("android.widget.FrameLayout").offspring("com.wemew.teapro:id/recycle_pay_way").child("androidx.appcompat.widget.LinearLayoutCompat")[1].offspring("com.wemew.teapro:id/et_pay_mode").set_text(100)
+
+
+touch(Template(r"tpl1747211945918.png", record_pos=(-0.112, -0.26), resolution=(1080, 2400)))
+touch(Template(r"tpl1747211985293.png", record_pos=(-0.219, 0.469), resolution=(1080, 2400)))
+
+poco("com.wemew.teapro:id/et_input_price").click()
+
+poco("com.wemew.teapro:id/tv_pay_commit_tt").click()
+poco("com.wemew.teapro:id/tv_pay_free").click()
+poco("com.wemew.teapro:id/tv_pay_free").click()
+
+poco("com.wemew.teapro:id/check_ticket_dark").click()
+poco("com.wemew.teapro:id/ll_red_block_root").click()
+poco("com.wemew.teapro:id/tv_select_table_ct").click()
+
+
+poco("com.wemew.teapro:id/ll_red_block_root").click()
+poco("android.widget.FrameLayout").offspring("com.wemew.teapro:id/recycle_table").child("android.widget.FrameLayout")[0].offspring("com.wemew.teapro:id/ll_red_block_root").click()
+
+poco("com.wemew.teapro:id/img_btn").click()
+poco("com.wemew.teapro:id/iv_scan_tt").click()
+poco("com.wemew.teapro:id/tv_check_commit_tt").click()
+poco("com.wemew.teapro:id/tv_save_wine").click()
+poco("com.wemew.teapro:id/et_phone").click()
+poco("com.wemew.teapro:id/tv_fix_table").click()
+poco("com.wemew.teapro:id/pagerBar").click()
+poco("com.wemew.teapro:id/tv_phone").get_text()
+poco("com.wemew.teapro:id/tv_c_2").click()
+poco(text="确定").click()
+poco("com.wemew.teapro:id/tv_c_1").click()
+poco(text="确定").click()
+poco("com.wemew.teapro:id/default_title_back").click()
+poco("com.wemew.teapro:id/tv_c_1").click()
+
+poco("com.wemew.teapro:id/tv_next").click()
+poco(text="9527").click()
+poco("com.wemew.teapro:id/tv_c_3").click()
+poco("com.wemew.teapro:id/tv_next").click()
+poco("com.wemew.teapro:id/default_title_back").click()
+

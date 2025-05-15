@@ -42,8 +42,8 @@ class TestCases(unittest.TestCase, LinkApp):
     @classmethod
     def tearDownClass(cls):
         # 关闭app
-        stop_app("com.wemew.teapro")
-
+        # stop_app("com.wemew.teapro")
+        pass
     @pytest.mark.order(1)
     def test_case_step1(self):
         """
@@ -54,8 +54,6 @@ class TestCases(unittest.TestCase, LinkApp):
         self.public.public_click_table("9527")
         #开台
         self.public.public_oprate_table("开台")
-        #确认开台
-        self.public.public_confirm_open_table()
         #点击桌台
         self.public.poco(text="9527").click()
         self.public.public_oprate_table("点单")
@@ -84,8 +82,6 @@ class TestCases(unittest.TestCase, LinkApp):
         self.public.public_click_table("9527")
         # 开台
         self.public.public_oprate_table("开台")
-        # 确认开台
-        self.public.public_confirm_open_table()
         # 点击桌台
         self.public.poco(text="9527").click()
         self.public.public_oprate_table("点单")
@@ -114,8 +110,6 @@ class TestCases(unittest.TestCase, LinkApp):
         self.public.public_click_table("9527")
         # 开台
         self.public.public_oprate_table("开台")
-        # 确认开台
-        self.public.public_confirm_open_table()
         # 点击桌台
         self.public.poco(text="9527").click()
         self.public.public_oprate_table("点单")
@@ -151,8 +145,6 @@ class TestCases(unittest.TestCase, LinkApp):
         self.public.public_click_table("9527")
         # 开台
         self.public.public_oprate_table("开台")
-        # 确认开台
-        self.public.public_confirm_open_table()
         # 点击桌台
         self.public.poco(text="9527").click()
         self.public.public_oprate_table("点单")
@@ -188,8 +180,6 @@ class TestCases(unittest.TestCase, LinkApp):
         self.public.public_click_table("9527")
         # 开台
         self.public.public_oprate_table("开台")
-        # 确认开台
-        self.public.public_confirm_open_table()
         # 点击桌台
         self.public.poco(text="9527").click()
         self.public.public_oprate_table("点单")
@@ -230,8 +220,6 @@ class TestCases(unittest.TestCase, LinkApp):
         self.public.public_click_table("9527")
         # 开台
         self.public.public_oprate_table("开台")
-        # 确认开台
-        self.public.public_confirm_open_table()
         # 点击桌台
         self.public.poco(text="9527").click()
         self.public.public_oprate_table("点单")
@@ -271,8 +259,6 @@ class TestCases(unittest.TestCase, LinkApp):
         self.public.public_click_table("9527")
         # 开台
         self.public.public_oprate_table("开台")
-        # 确认开台
-        self.public.public_confirm_open_table()
         # 点击桌台
         self.public.poco(text="9527").click()
         self.public.public_oprate_table("点单")
@@ -302,8 +288,8 @@ class TestCases(unittest.TestCase, LinkApp):
         self.public.public_pay_method("自定义支付")
         time.sleep(1)
         #组合支付  输入金额
-        touch((350,1780))
-        touch((305,1708))
+        touch((335,909))
+        touch((302,1704))
         touch((525,2177))
         touch((960,2166))
         touch((1010,1556))
@@ -324,8 +310,6 @@ class TestCases(unittest.TestCase, LinkApp):
         self.public.public_click_table("9527")
         # 开台
         self.public.public_oprate_table("开台")
-        # 确认开台
-        self.public.public_confirm_open_table()
         # 点击桌台
         self.public.poco(text="9527").click()
         self.public.public_oprate_table("点单")
@@ -371,8 +355,6 @@ class TestCases(unittest.TestCase, LinkApp):
         self.public.public_click_table("9527")
         # 开台
         self.public.public_oprate_table("开台")
-        # 确认开台
-        self.public.public_confirm_open_table()
         # 点击桌台并赠送
         self.public.poco(text="9527").click()
         self.public.public_oprate_table("赠送")
@@ -392,8 +374,6 @@ class TestCases(unittest.TestCase, LinkApp):
         self.public.public_click_table("9527")
         # 开台
         self.public.public_oprate_table("开台")
-        # 确认开台
-        self.public.public_confirm_open_table()
         self.public.poco(text="9527").click()
         #滑动
         self.public.poco("com.wemew.teapro:id/cl_red_table_info").swipe([0.1034, -0.6719])
@@ -413,8 +393,6 @@ class TestCases(unittest.TestCase, LinkApp):
         self.public.public_click_table("9527")
         # 开台
         self.public.public_oprate_table("开台")
-        # 确认开台
-        self.public.public_confirm_open_table()
         # 点击桌台
         self.public.poco(text="9527").click()
         self.public.public_oprate_table("点单")
@@ -443,8 +421,6 @@ class TestCases(unittest.TestCase, LinkApp):
         self.public.public_click_table("9527")
         # 开台
         self.public.public_oprate_table("开台")
-        # 确认开台
-        self.public.public_confirm_open_table()
         # 点击桌台
         self.public.poco(text="9527").click()
         self.public.public_oprate_table("团购核销")
@@ -469,7 +445,6 @@ class TestCases(unittest.TestCase, LinkApp):
         self.public.public_click_table("9527")
         #预订开台
         self.public.public_oprate_table(method="开台",table_status="reserve",open_type="预订开台")
-        self.public.public_confirm_open_table()
         # 点击桌台
         self.public.poco(text="9527").click()
         self.public.public_oprate_table("点单")
@@ -572,8 +547,6 @@ class TestCases(unittest.TestCase, LinkApp):
         self.public.public_click_table("9527")
         # 开台
         self.public.public_oprate_table("开台")
-        # 确认开台
-        self.public.public_confirm_open_table()
         # 点击桌台
         self.public.poco(text="9527").click()
         self.public.public_oprate_table("点单")
@@ -599,8 +572,126 @@ class TestCases(unittest.TestCase, LinkApp):
         self.public.public_operate_member("销卡")
         #返回首页
         self.public.public_operate_member("返回")
+    @pytest.mark.order(18)
     def test_case_step18(self):
-        pass
+        """
+        开台-点单-手动折扣-会员支付-翻台
+        :return:
+        """
+        self.public.public_click_table("9527")
+        # 开台
+        self.public.public_oprate_table("开台")
+        # 点击桌台
+        self.public.poco(text="9527").click()
+        self.public.public_oprate_table("点单")
+        # 加购商品套餐
+        self.public.public_add_goods()
+        # 直接买单
+        self.public.public_save_goods("3")
+        #录入会员信息
+        self.public.public_total_discount("会员信息")
+        #手动折扣
+        self.public.public_total_discount("折扣")
+        #选择会员支付
+        self.public.public_pay_method("会员支付")
+        #确认收款
+        self.public.public_confirm_pay()
+        #翻台
+        self.public.public_click_table("9527")
+        self.public.public_oprate_table("翻台")
+    def test_case_step19(self):
+        """
+        开台-点单-挂单-转台-自定义支付-翻台
+        :return:
+        """
+        self.public.public_click_table("9527")
+        self.public.public_oprate_table("开台")
+        self.public.public_click_table("9527")
+        self.public.public_oprate_table("点单")
+        self.public.public_add_goods()
+        #挂单
+        self.public.public_save_goods("2")
+        self.public.public_click_table("9527")
+        # 滑动
+        self.public.poco("com.wemew.teapro:id/cl_red_table_info").swipe([0.1034, -0.6719])
+        #转台
+        self.public.public_oprate_table("转台")
+        self.public.public_turn_table(turn_type="转台",table_num="M2")
+        #点击转台后的桌台
+        self.public.public_click_table("M2[9527转]")
+        #支付
+        self.public.public_switch_tab("2")
+        self.public.public_switch_tab("7")
+        # 去支付
+        self.public.public_buy_pay("买单支付")
+        #自定义支付方式
+        self.public.public_pay_method("自定义支付")
+        self.public.public_confirm_pay()
+        #翻台
+        self.public.public_click_table("M2[9527转]")
+        self.public.public_oprate_table("翻台")
+    def test_case_step20(self):
+        """
+        打赏-自定义支付
+        :return:
+        """
+        self.public.public_click_menu("打赏小费")
+        self.public.public_reward()
+    def test_case_step21(self):
+        """
+        打赏-组合支付
+        :return:
+        """
+        self.public.public_click_menu("打赏小费")
+        self.public.public_reward(pay_type="组合支付")
+    def test_case_step22(self):
+        """
+        台票-充值-自定义支付
+        :return:
+        """
+        for i in range(3):
+            self.public.public_swipe_menu("right")
+        time.sleep(1)
+        self.public.public_click_menu("台票")
+        self.public.public_taipiao()
+    def test_case_step23(self):
+        """
+        台票-充值-组合支付
+        :return:
+        """
+        self.public.public_click_menu("台票")
+        self.public.public_taipiao(pay_type="组合支付")
+    def test_case_step24(self):
+        """
+        台票-核销
+        :return:
+        """
+        #开新的桌台
+        self.public.public_click_table("9527")
+        self.public.public_oprate_table("开台")
+        self.public.public_click_menu("台票")
+        self.public.public_taipiao_verify()
+        self.public.public_click_table("9527")
+        self.public.public_oprate_table("翻台")
+    def test_case_step25(self):
+        """
+        排队-取号-叫号-入场-开台-点单-自定义支付-翻台
+        :return:
+        """
+        self.public.public_click_menu("排队")
+        #排队
+        self.public.public_line_up()
+        #断言
+
+        #点单
+        self.public.public_click_table("9527")
+        self.public.public_oprate_table("点单")
+        self.public.public_add_goods()
+        self.public.public_save_goods("3")
+        self.public.public_pay_method("自定义支付")
+        self.public.public_confirm_pay()
+        self.public.public_click_table("9527")
+        self.public.public_oprate_table("翻台")
 
 
 
