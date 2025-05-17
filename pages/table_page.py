@@ -378,6 +378,10 @@ class TablePage:
             self.poco(text="台票").click()
         elif menu_name =="排队":
             self.poco(text="排队").click()
+        elif menu_name == "酒水回收":
+            self.poco(text="酒水回收").click()
+        elif menu_name == "回收审核":
+            self.poco(text="回收审核").click()
 
     def public_refresh_page(self):
         """
@@ -740,4 +744,37 @@ class TablePage:
         time.sleep(1)
         #返回首页
         self.poco("com.wemew.teapro:id/default_title_back").click()
-
+    def public_recover_wine(self):
+        """
+        酒水回收
+        :return:
+        """
+        #选择桌台
+        self.poco(text="9527").click()
+        time.sleep(0.5)
+        #选择酒水
+        touch(Template(r"photoes/tpl1747302071299.png", record_pos=(0.387, -0.497), resolution=(1080, 2400)))
+        #整体回收
+        self.poco("com.wemew.teapro:id/iv_increase_whole").click()
+        #部分回收
+        self.poco("com.wemew.teapro:id/iv_increase_dot").click()
+        #瓶盖回收
+        self.poco("com.wemew.teapro:id/iv_increase_bottom").click()
+        #空瓶回收
+        self.poco("com.wemew.teapro:id/iv_increase_empty").click()
+        #确定回收
+        self.poco("com.wemew.teapro:id/tv_sure_wine").click()
+        self.poco("com.wemew.teapro:id/tv_next").click()
+        #返回首页
+        self.poco("com.wemew.teapro:id/default_title_back").click()
+    def public_recover_wine_verify(self,verify_type):
+        """
+        酒水回收  审核
+        :return:
+        """
+        if verify_type == "通过":
+            self.poco("com.wemew.teapro:id/tv_pass").click()
+        else:
+            self.poco("com.wemew.teapro:id/tv_cancel").click()
+        #返回首页
+        self.poco("com.wemew.teapro:id/default_title_back").click()

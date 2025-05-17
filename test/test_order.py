@@ -681,8 +681,6 @@ class TestCases(unittest.TestCase, LinkApp):
         self.public.public_click_menu("排队")
         #排队
         self.public.public_line_up()
-        #断言
-
         #点单
         self.public.public_click_table("9527")
         self.public.public_oprate_table("点单")
@@ -692,6 +690,18 @@ class TestCases(unittest.TestCase, LinkApp):
         self.public.public_confirm_pay()
         self.public.public_click_table("9527")
         self.public.public_oprate_table("翻台")
+    def test_case_step26(self):
+        """
+        酒水回收+审核
+        :return:
+        """
+        self.public.public_swipe_menu("right")
+        self.public.public_click_menu("酒水回收")
+        self.public.public_recover_wine()
+        self.public.public_click_menu("回收审核")
+        self.public.public_recover_wine_verify("审核通过")
+        self.public.public_swipe_menu("left")
+
 
 
 
