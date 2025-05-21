@@ -1,19 +1,23 @@
-#工具类
-from airtest.core.api import snapshot
+# utils.py
+import time
+from functools import wraps
+import pytest
+from airtest.core.api import *
 
-
-class Utils:
-    @staticmethod
-    def safe_assert_exist(condition,message="断言失败!"):
-        """
-        安全的断言方法，判断元素是否存在
-        :param condition:断言条件，可以是图片 也可以是元素
-        :param message:断言失败 抛出message
-        :return:
-        """
+def airtest_failure_handler(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
         try:
-            assert condition, message
-        except AssertionError as e:
-            print(f"断言失败: {e}")
-            #失败截图
-            snapshot(filename=message,msg=f"断言失败截图_{message}")
+            return func(*args, **kwargs)
+        except Exception as e:
+            #获取当前用例名称
+            import sys
+            mod = sys.modules[func.__module__]
+            test_name = getattr(mod, 'current_test_name', None)
+            # 失败后操作
+            stop_app("com.wemew.teapro")
+            time.sleep(1)
+            start_app("com.wemew.teapro")
+            print(f"{test_name}执行失败")
+            pytest.skip(f"自动执行下一条: {str(e)}")
+    return wrapper

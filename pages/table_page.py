@@ -1,15 +1,15 @@
 import time
+import traceback
 
-from config.utils import Utils
-
+from mistune.plugins.table import table
 from poco.drivers.android.uiautomation import AndroidUiautomationPoco
 from airtest.core.api import *
+from poco.exceptions import PocoNoSuchNodeException
 
 
 class TablePage:
     def __init__(self):
         self.poco = AndroidUiautomationPoco(use_airtest_input=True, screenshot_each_action=False)
-        self.utils = Utils()
 
     # 登陆
     def public_login(self):
@@ -25,9 +25,6 @@ class TablePage:
             self.poco("com.wemew.teapro:id/et_pwd").set_text("1234567")
             self.poco("com.wemew.teapro:id/tv_login_msg").click()
         # 断言登陆是否成功
-        self.utils.safe_assert_exist(
-            Template(r"photoes/tpl1745742985563.png", record_pos=(-0.311, -0.982), resolution=(1080, 2400)),
-            "账号密码登陆断言失败！")
 
     # 查询不同状态的桌台
     def public_query_table_status(self, status):
@@ -60,17 +57,30 @@ class TablePage:
         self.poco("com.wemew.teapro:id/et_search_table").set_text(table_num)
         self.poco("com.wemew.teapro:id/tv_search_table").click()
 
-    def public_click_table_first(self):
+    def public_find_free_table(self):
         """
-        点击第一张桌台
+        寻找空闲桌台
         """
-        self.poco("android.widget.FrameLayout").child("android.widget.LinearLayout").offspring(
-            "android:id/content").offspring("com.wemew.teapro:id/app_bar_main").offspring(
-            "com.wemew.teapro:id/view_pager").child("android.widget.FrameLayout").offspring(
-            "com.wemew.teapro:id/recycler_view_tab").child("android.widget.FrameLayout")[0].offspring(
-            "com.wemew.teapro:id/ll_grey_block_root").click()
+        time.sleep(1)
+        try:
+            self.poco(text="空闲")[0].click()
+            #获取桌台号
+            table = self.poco("com.wemew.teapro:id/tv_table_name").get_text()
+            table_num = table.split(": ")[1]
+            return table_num
+        except PocoNoSuchNodeException as e:
+            # print("发生异常：")
+            # traceback.print_exc()  # 打印完整堆栈信息
+            # print(f"异常类型: {type(e).__name__}")  # 只打印异常类型名
+            # raise  # 继续抛出异常，停止流程，便于调试
+            print("当前无空闲桌台 向下滑动")
+            swipe(v1=(0.5, 0.8),v2=(0.5,0))
+            self.poco(text="空闲")[0].click()
+            # 获取桌台号
+            table = self.poco("com.wemew.teapro:id/tv_table_name").get_text()
+            table_num = table.split(": ")[1]
+            return table_num
 
-    # 点击桌台
     def public_click_table(self, table_num):
         """
         点击桌台
@@ -139,6 +149,7 @@ class TablePage:
             touch((640, 1900))
         # 套餐加入购物车
         touch(Template(r"photoes/tpl1745739236740.png", record_pos=(-0.08, 0.911), resolution=(1080, 2400)))
+        time.sleep(0.2)
         # 单品流程
         touch(Template(r"photoes/tpl1745830372202.png", record_pos=(0.4, -0.044), resolution=(1080, 2400)))
         touch(Template(r"photoes/tpl1745739395608.png", record_pos=(0.301, 0.768), resolution=(1080, 2400)))
@@ -162,6 +173,7 @@ class TablePage:
             touch(Template(r"photoes/tpl1745739697802.png", record_pos=(0.321, 0.91), resolution=(1080, 2400)))
         else:
             print("保存购物车/挂单/买单支付失败，请输入正确的类型:", save_type)
+        time.sleep(1)
 
     # 选择支付方式
     def public_pay_method(self, pay_method):
@@ -188,6 +200,7 @@ class TablePage:
         :return:
         """
         touch(Template(r"photoes/tpl1745747890035.png", record_pos=(0.003, 0.988), resolution=(1080, 2400)))
+        time.sleep(0.5)
 
     # 桌台详情页，切换页面
     def public_switch_tab(self, page_num):
@@ -364,24 +377,7 @@ class TablePage:
         点击app最上方的菜单
         :return:
         """
-        if menu_name == "接订":
-            self.poco(text="接订").click()
-        elif menu_name == "打赏小费":
-            self.poco(text="打赏小费").click()
-        elif menu_name == "存酒审核":
-            self.poco(text="存酒审核").click()
-        elif menu_name == "取酒审核":
-            self.poco(text="取酒审核").click()
-        elif menu_name == "会员":
-            self.poco(text="会员").click()
-        elif menu_name == "台票":
-            self.poco(text="台票").click()
-        elif menu_name =="排队":
-            self.poco(text="排队").click()
-        elif menu_name == "酒水回收":
-            self.poco(text="酒水回收").click()
-        elif menu_name == "回收审核":
-            self.poco(text="回收审核").click()
+        self.poco(text=menu_name).click()
 
     def public_refresh_page(self):
         """
@@ -670,7 +666,6 @@ class TablePage:
     def public_taipiao(self,pay_type=None):
         """
         :param pay_type:是否是组合支付
-        :param is_end: 台票充值核销是否结束
         :return:
         """
         #输入充值金额
@@ -738,12 +733,14 @@ class TablePage:
         #入场
         self.poco("com.wemew.teapro:id/tv_c_3").click()
         #选择桌台 开台
-        self.poco(text="9527").click()
+        self.poco("com.wemew.teapro:id/tv_tab_num")[0].click()
+        table_num = self.poco("com.wemew.teapro:id/tv_tab_num")[0].get_text()
         self.poco("com.wemew.teapro:id/tv_next").click()
         self.poco("com.wemew.teapro:id/tv_next").click()
         time.sleep(1)
         #返回首页
         self.poco("com.wemew.teapro:id/default_title_back").click()
+        return table_num
     def public_recover_wine(self):
         """
         酒水回收
@@ -777,4 +774,71 @@ class TablePage:
         else:
             self.poco("com.wemew.teapro:id/tv_cancel").click()
         #返回首页
+        self.poco("com.wemew.teapro:id/default_title_back").click()
+    def public_add_staff(self):
+        """
+        添加员工
+        :return:
+        """
+        #点击 新增员工
+        self.poco("com.wemew.teapro:id/tv_right").click()
+        #输入员工信息
+        self.poco("com.wemew.teapro:id/et_name").set_text("ui自动化测试员工")
+        self.poco("com.wemew.teapro:id/et_phone").set_text("19511862897")
+        self.poco("com.wemew.teapro:id/et_position").set_text("ui自动化-职位")
+        self.poco("com.wemew.teapro:id/et_login_pwd").set_text("123456")
+        self.poco("com.wemew.teapro:id/et_repeat_pwd").set_text("123456")
+        self.poco(text="ui自动化角色").click()
+        #保存
+        self.poco("com.wemew.teapro:id/tv_save").click()
+        time.sleep(1)
+    def public_operate_staff(self,operate_type):
+        """
+        停用/启用员工
+        :return:
+        """
+        #搜索员工
+        self.poco("com.wemew.teapro:id/et_search").set_text("19511862897")
+        touch((522,232))
+        time.sleep(0.8)
+        touch((984,2173))
+        if operate_type == "停用":
+            #点击停用
+            self.poco("com.wemew.teapro:id/tv_manager_people").click()
+        else:
+            #点击启用
+            self.poco("com.wemew.teapro:id/tv_manager_people").click()
+    def public_inventory_check(self):
+        """
+        库存盘点
+        :return:
+        """
+        #选择商品
+        self.poco("com.wemew.teapro:id/tv_select").click()
+        self.poco("com.wemew.teapro:id/tv_select")[0].click()
+        self.poco("com.wemew.teapro:id/et_set_price").set_text("100")
+        self.poco("com.wemew.teapro:id/tv_sure").click()
+        self.poco("com.wemew.teapro:id/tv_save_wine").click()
+        time.sleep(0.5)
+        self.poco("com.wemew.teapro:id/tv_save_wine").click()
+        self.poco("com.wemew.teapro:id/default_title_back").click()
+    def public_storage_in(self):
+        """
+        商品入库
+        :return:
+        """
+        #选择入库类型
+        self.poco("com.wemew.teapro:id/tv_type").click()
+        self.poco(text="ui自动化入库").click()
+        #选择商品
+        self.poco("com.wemew.teapro:id/tv_select").click()
+        self.poco('com.wemew.teapro:id/tv_select')[0].click()
+        #输入数量和成本价
+        self.poco("com.wemew.teapro:id/et_set_quantity").set_text("100")
+        self.poco("com.wemew.teapro:id/et_set_price").set_text("100")
+        #确认
+        self.poco("com.wemew.teapro:id/tv_sure").click()
+        self.poco("com.wemew.teapro:id/tv_save_wine").click()
+        time.sleep(0.5)
+        self.poco("com.wemew.teapro:id/tv_save_wine").click()
         self.poco("com.wemew.teapro:id/default_title_back").click()

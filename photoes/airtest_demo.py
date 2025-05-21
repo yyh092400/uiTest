@@ -225,3 +225,69 @@ poco("com.wemew.teapro:id/tv_c_3").click()
 poco("com.wemew.teapro:id/tv_next").click()
 poco("com.wemew.teapro:id/default_title_back").click()
 
+poco(text="9527").click()
+
+touch(Template(r"tpl1747302071299.png", record_pos=(0.387, -0.497), resolution=(1080, 2400)))
+poco("com.wemew.teapro:id/iv_increase_whole").click()
+poco("com.wemew.teapro:id/iv_increase_dot").click()
+poco("com.wemew.teapro:id/iv_increase_bottom").click()
+poco("com.wemew.teapro:id/iv_increase_empty").click()
+poco("com.wemew.teapro:id/tv_sure_wine").click()
+poco("com.wemew.teapro:id/tv_next").click()
+poco("com.wemew.teapro:id/default_title_back").click()
+
+poco("com.wemew.teapro:id/tv_pass").click()
+poco("com.wemew.teapro:id/default_title_back").click()
+poco("com.wemew.teapro:id/tv_cancel").click()
+
+
+poco("com.wemew.teapro:id/tv_right").click()
+poco("com.wemew.teapro:id/et_name").click()poco("com.wemew.teapro:id/tv_manager_people").click()poco("com.wemew.teapro:id/tv_manager_people").click()
+
+
+poco("com.wemew.teapro:id/et_phone").click()
+poco("com.wemew.teapro:id/et_repeat_pwd").click()
+poco("com.wemew.teapro:id/et_login_pwd").click()
+poco("com.wemew.teapro:id/et_position").click()
+poco("com.wemew.teapro:id/tv_save").click()
+
+poco("com.wemew.teapro:id/et_search").click()
+poco("com.wemew.teapro:id/tv_select").click()
+poco("com.wemew.teapro:id/et_set_price").click()
+poco("com.wemew.teapro:id/tv_sure").click()
+poco("com.wemew.teapro:id/tv_save_wine").click()
+poco("com.wemew.teapro:id/tv_save_wine").click()
+poco("com.wemew.teapro:id/default_title_back").click()
+poco("com.wemew.teapro:id/tv_type").click()
+
+poco("com.wemew.teapro:id/et_set_quantity").click()
+poco("com.wemew.teapro:id/et_set_price").click()
+poco("com.wemew.teapro:id/tv_sure").click()
+poco("com.wemew.teapro:id/tv_save_wine").click()
+poco("com.wemew.teapro:id/tv_save_wine").click()
+
+
+
+assert_equal("实际值", "预测值", "请填写测试点.")
+assert_exists(Template(r"tpl1747646504998.png", record_pos=(-0.311, 0.263), resolution=(1080, 2400)), "请填写测试点")
+
+poco("com.wemew.teapro:id/tv_tab_num",)
+poco("android.widget.FrameLayout").offspring("com.wemew.teapro:id/fl_background").child("android.widget.LinearLayout").offspring("android.widget.ImageView").click()
+
+
+poco("android.widget.ImageView").click()
+poco("android.widget.FrameLayout").offspring("com.wemew.teapro:id/fl_background").child("android.widget.LinearLayout").offspring("android.widget.ImageView").click()
+
+
+poco(text="会员").swipe([0.0052, -0.4596])
+poco(text="会员").swipe([-0.0078, -0.0478])
+
+poco(text="会员").swipe([0.0, -0.0327])
+poco("com.wemew.teapro:id/tv_search_table").swipe([-0.0207, -0.5237])
+poco("com.wemew.teapro:id/default_title_back").click()
+
+
+
+
+
+
