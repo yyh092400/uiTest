@@ -22,9 +22,8 @@ class TablePage:
             # 登陆
             self.poco("com.wemew.teapro:id/check_pwd").click()
             self.poco("com.wemew.teapro:id/et_account").set_text("18398939934")
-            self.poco("com.wemew.teapro:id/et_pwd").set_text("1234567")
-            self.poco("com.wemew.teapro:id/tv_login_msg").click()
-        # 断言登陆是否成功
+            self.poco("com.wemew.teapro:id/et_pwd").set_text("123456")
+            self.poco("com.wemew.teapro:id/tv_login_pwd").click()
 
     # 查询不同状态的桌台
     def public_query_table_status(self, status):
@@ -65,8 +64,8 @@ class TablePage:
         try:
             self.poco(text="空闲")[0].click()
             #获取桌台号
-            table = self.poco("com.wemew.teapro:id/tv_table_name").get_text()
-            table_num = table.split(": ")[1]
+            table1 = self.poco("com.wemew.teapro:id/tv_table_name").get_text()
+            table_num = table1.split(": ")[1]
             return table_num
         except PocoNoSuchNodeException as e:
             # print("发生异常：")
@@ -77,8 +76,8 @@ class TablePage:
             swipe(v1=(0.5, 0.8),v2=(0.5,0))
             self.poco(text="空闲")[0].click()
             # 获取桌台号
-            table = self.poco("com.wemew.teapro:id/tv_table_name").get_text()
-            table_num = table.split(": ")[1]
+            table2 = self.poco("com.wemew.teapro:id/tv_table_name").get_text()
+            table_num = table2.split(": ")[1]
             return table_num
 
     def public_click_table(self, table_num):
