@@ -1,7 +1,5 @@
 import time
-import traceback
 
-from mistune.plugins.table import table
 from poco.drivers.android.uiautomation import AndroidUiautomationPoco
 from airtest.core.api import *
 from poco.exceptions import PocoNoSuchNodeException
@@ -10,6 +8,7 @@ from poco.exceptions import PocoNoSuchNodeException
 class TablePage:
     def __init__(self):
         self.poco = AndroidUiautomationPoco(use_airtest_input=True, screenshot_each_action=False)
+
 
     # 登陆
     def public_login(self):
@@ -24,27 +23,12 @@ class TablePage:
             self.poco("com.wemew.teapro:id/et_account").set_text("18398939934")
             self.poco("com.wemew.teapro:id/et_pwd").set_text("123456")
             self.poco("com.wemew.teapro:id/tv_login_pwd").click()
-
-    # 查询不同状态的桌台
-    def public_query_table_status(self, status):
+    def public_order(self):
         """
-        查询空闲桌台
-        :param: status
+        开台-点单-选购商品-挂单
         :return:
         """
-        if status == "空闲":
-            # 筛选空闲桌台
-            self.poco("com.wemew.teapro:id/tv_table_state_empty").click()
-            # 读取空闲桌台号
-            table_num = self.poco("android.widget.FrameLayout").child("android.widget.LinearLayout").offspring(
-                "android:id/content").offspring(
-                "com.wemew.teapro:id/app_bar_main").offspring("com.wemew.teapro:id/view_pager").child(
-                "android.widget.FrameLayout").offspring(
-                "com.wemew.teapro:id/recycler_view_tab").child("android.widget.FrameLayout")[0].offspring(
-                "com.wemew.teapro:id/tv_tab_num").get_text()
-            return table_num
-        elif status == "全部区域":
-            self.poco("com.wemew.teapro:id/tv_all_key").click()
+        table_num = self.public_query_table_status("空闲")
 
     # 按桌台号查询桌台
     def public_query_table_by_num(self, table_num=None):
@@ -63,23 +47,10 @@ class TablePage:
         time.sleep(1)
         try:
             self.poco(text="空闲")[0].click()
-            #获取桌台号
-            table1 = self.poco("com.wemew.teapro:id/tv_table_name").get_text()
-            table_num = table1.split(": ")[1]
-            return table_num
         except PocoNoSuchNodeException as e:
-            # print("发生异常：")
-            # traceback.print_exc()  # 打印完整堆栈信息
-            # print(f"异常类型: {type(e).__name__}")  # 只打印异常类型名
-            # raise  # 继续抛出异常，停止流程，便于调试
             print("当前无空闲桌台 向下滑动")
             swipe(v1=(0.5, 0.8),v2=(0.5,0))
             self.poco(text="空闲")[0].click()
-            # 获取桌台号
-            table2 = self.poco("com.wemew.teapro:id/tv_table_name").get_text()
-            table_num = table2.split(": ")[1]
-            return table_num
-
     def public_click_table(self, table_num):
         """
         点击桌台
@@ -87,95 +58,163 @@ class TablePage:
         :return:
         """
         self.poco(text=table_num).click()
-
+        time.sleep(1)
+    #开台
+    def public_open_table(self):
+        """
+        开台流程
+        :return:桌台号
+        """
+        time.sleep(0.3)
+        #
+        # 定位桌台号
+        table = self.poco("com.wemew.teapro:id/tv_tab_num").get_text()
+        table_num = table.split("(")[0]
+        touch((788, 2223))
+        return table_num
     # 操作桌台
     def public_oprate_table(self,method, table_status="normal", open_type=None):
         """
         桌台的基本操作，开台、翻台、点单等
         :return:
         """
+        time.sleep(1)
         if method == "开台":
             if table_status == "normal":
-                touch(Template(r"photoes/tpl1745738264181.png", record_pos=(-0.227, 0.835), resolution=(1080, 2400)))
-                self.poco("com.wemew.teapro:id/tv_next").click()
+                self.poco("开台").click()
+                time.sleep(0.3)
+                #定位桌台号
+                table = self.poco("com.wemew.teapro:id/tv_tab_num").get_text()
+                table_num = table.split("(")[0]
+                #确认开台
+                touch((788,2223 ))
+                return table_num
             elif table_status == "reserve":
-                touch(Template(r"photoes/tpl1745738264181.png", record_pos=(-0.239, 0.849), resolution=(1080, 2400)))
+                self.poco("开台").click()
                 if open_type == "普通开台":
-                    touch(Template(r"photoes/tpl1745743830688.png", record_pos=(-0.197, 0.149),
-                                   resolution=(1080, 2400)))
-                    self.poco("com.wemew.teapro:id/tv_next").click()
+                    self.poco("普通开台").click()
+                    #确认开台
+                    touch((788,2223 ))
                 elif open_type == "预订开台":
-                    touch(Template(r"photoes/tpl1745743835476.png", record_pos=(0.197, 0.148),
-                                   resolution=(1080, 2400)))
-                    self.poco("com.wemew.teapro:id/tv_next").click()
+                    self.poco("预订开台").click()
+                    # 确认开台
+                    touch((788, 2223))
         elif method == "翻台":
-            touch(Template(r"photoes/tpl1745740090259.png", record_pos=(0.232, 0.776), resolution=(1080, 2400)))
+            self.poco("翻台").click()
         elif method == "点单":
-            touch(Template(r"photoes/tpl1745738409715.png", record_pos=(-0.221, 0.776), resolution=(1080, 2400)))
+            self.poco("点单").click()
         elif method == "预订":
-            touch(Template(r"photoes/tpl1745747062893.png", record_pos=(0.229, 0.866), resolution=(1080, 2400)))
+            self.poco("预订").click()
         elif method == "锁台":
             pass
         elif method == "赠送":
-            touch(Template(r"photoes/tpl1745747097220.png", record_pos=(0.247, 0.816), resolution=(1080, 2400)))
+            self.poco("赠送").click()
         elif method == "存酒":
-            pass
+            self.poco("存酒").click()
         elif method == "取酒":
-            pass
+            self.poco("取酒").click()
         elif method == "转台":
-            self.poco(text="转台").click()
+            self.poco("转台").click()
         elif method == "卡券核销":
-            touch(Template(r"photoes/tpl1745747122534.png", record_pos=(-0.345, 1.016), resolution=(1080, 2400)))
+            self.poco("卡券核销").click()
         elif method == "团购核销":
-            touch(Template(r"photoes/tpl1745747116510.png", record_pos=(-0.231, 0.807), resolution=(1080, 2400)))
+            self.poco("团购核销").click()
         time.sleep(1)
 
     # 加购商品
-    def public_add_goods(self):
+    def public_add_goods(self,set_meal_type="普通套餐"):
         """
         选择商品+套餐
+        :param: setMeal_type:套餐类型
         :return:
         """
-        # 开始选择商品套餐
-        touch(Template(r"photoes/tpl1745738661614.png", record_pos=(0.401, -0.386), resolution=(1080, 2400)))
-        wait(Template(r"photoes/tpl1743587579470.png", record_pos=(-0.028, 0.273), resolution=(1080, 2400)),
-             timeout=5, interval=0.2)
-        # 选择套餐
-        touch(Template(r"photoes/tpl1743587579470.png", record_pos=(-0.028, 0.273), resolution=(1080, 2400)))
-        # 添加任选商品
-        for i in range(0, 4):
-            # +号
-            touch((640, 1900))
-        # 套餐加入购物车
-        touch(Template(r"photoes/tpl1745739236740.png", record_pos=(-0.08, 0.911), resolution=(1080, 2400)))
-        time.sleep(0.2)
-        # 单品流程
-        touch(Template(r"photoes/tpl1745830372202.png", record_pos=(0.4, -0.044), resolution=(1080, 2400)))
-        touch(Template(r"photoes/tpl1745739395608.png", record_pos=(0.301, 0.768), resolution=(1080, 2400)))
-        self.poco("com.wemew.teapro:id/iv_increase").click()
-        touch(Template(r"photoes/tpl1745739495179.png", record_pos=(-0.003, 0.89), resolution=(1080, 2400)))
-        # 选好了  去结算
-        touch(Template(r"photoes/tpl1745739567634.png", record_pos=(0.308, 0.881), resolution=(1080, 2400)))
+        time.sleep(1.5)
+        if set_meal_type == "普通套餐":
+            touch((950, 735))
+            time.sleep(0.5)
+            for i in range(0, 5):
+                # +号
+                touch((699, 2030))
+            self.poco("加入购物车").click()
+        else:
+            #普通套餐
+            touch((950, 735))
+            time.sleep(0.5)
+            for i in range(0, 5):
+                # +号
+                touch((699, 2030))
+            time.sleep(0.2)
+            self.poco("加入购物车").click()
 
-    @staticmethod
-    def public_save_goods(save_type):
+            # 全必选套餐
+            touch((950, 1013))
+            time.sleep(0.5)
+            self.poco("加入购物车").click()
+
+            # 全任选套餐
+            touch((950, 1300))
+            time.sleep(0.5)
+            # +号
+            for i in range(0, 2):
+                touch((341, 2030))
+            for i in range(0, 3):
+                touch((699, 2030))
+            self.poco("加入购物车").click()
+
+            #可加价套餐
+            touch((950, 1578))
+            time.sleep(0.5)
+            for i in range(0, 2):
+                touch((341, 2030))
+            # 点击  加入购物车
+            self.poco("加入购物车").click()
+
+            #可替换套餐
+            touch((950, 1871))
+            time.sleep(0.5)
+            touch((155, 1603))
+            # 下滑
+            swipe((495, 1178), (495, 202))
+            time.sleep(0.5)
+            # 勾选  替换商品
+            touch((223, 1483))
+            self.poco("加入购物车").click()
+        time.sleep(0.5)
+        #选择单品分类
+        touch((101,655))
+        #点击 单品的选规格
+        touch((950,1441))
+        time.sleep(0.5)
+        #点击 加入购物车
+        self.poco("加入购物车").click()
+        # 点击 单品的选规格
+        touch((950, 1441))
+        time.sleep(0.5)
+        #选择多单位
+        touch((337,1401))
+        # 点击 加入购物车
+        self.poco("加入购物车").click()
+        #点击去结算
+        self.poco("去结算").click()
+    def public_save_goods(self,save_type):
         """
         1.保存购物车  2.挂单   3.买单支付
         :return:
         """
         time.sleep(1)
         if save_type == "1":
-            touch(Template(r"photoes/tpl1745747791703.png", record_pos=(-0.323, 0.994), resolution=(1080, 2400)))
+            self.poco("保存购物车").click()
         elif save_type == "2":
-            touch(Template(r"photoes/tpl1745747807657.png", record_pos=(0.001, 0.994), resolution=(1080, 2400)))
+            self.poco("挂单").click()
         elif save_type == "3":
-            touch(Template(r"photoes/tpl1745739697802.png", record_pos=(0.321, 0.91), resolution=(1080, 2400)))
+            self.poco("买单支付").click()
         else:
             print("保存购物车/挂单/买单支付失败，请输入正确的类型:", save_type)
         time.sleep(1)
 
-    # 选择支付方式
-    def public_pay_method(self, pay_method):
+        # 选择支付方式
+    @staticmethod
+    def public_pay_method(pay_method):
         """
         选择支付方式
         :param pay_method:string,移动支付/会员支付/自定义支付
@@ -183,119 +222,143 @@ class TablePage:
         """
         time.sleep(1)
         if pay_method == "移动支付":
-            self.poco(text="移动支付").click()
+            touch(Template(r"photoes/tpl1750090544107.png", record_pos=(-0.267, 0.14), resolution=(1080, 2400)))
         elif pay_method == "会员支付":
-            self.poco(text="会员支付").click()
+            touch(Template(r"photoes/tpl1750090548114.png", record_pos=(-0.283, 0.254), resolution=(1080, 2400)))
         elif pay_method == "自定义支付":
-            self.poco(text="auto支付").click()
+            touch(Template(r"photoes/tpl1750090551467.png", record_pos=(-0.284, 0.369), resolution=(1080, 2400)))
         else:
             print("请输入正确的支付方式:", pay_method)
 
-    @staticmethod
+    def public_combine_pay(self, pay_method1, pay_method2,money):
+        """
+        组合支付
+        :param pay_method1: 移动支付/会员支付/自定义支付
+        :param money:输入金额
+        :param pay_method2:移动支付/会员支付/自定义支付
+        :return:
+        """
+        self.public_pay_method(pay_method1)
+        self.public_pay_method(pay_method2)
+        if pay_method1 == "移动支付" and pay_method2 == "会员支付":
+            pass
+        elif pay_method1 == "移动支付" and pay_method2 == "自定义支付":
+            pass
+        elif pay_method1 == "会员支付" and pay_method2 == "自定义支付":
+            # 选择会员支付
+            # 组合支付  输入金额
+            touch((200, 1777))
+            text(money)
+
+
     # 确认收款，最后的支付步骤
-    def public_confirm_pay():
+    def public_confirm_pay(self):
         """
         确认收款，最后的支付步骤
         :return:
         """
-        touch(Template(r"photoes/tpl1745747890035.png", record_pos=(0.003, 0.988), resolution=(1080, 2400)))
+        self.poco("确认收款").click()
         time.sleep(0.5)
-
-    # 桌台详情页，切换页面
-    def public_switch_tab(self, page_num):
+        # 支付成功 确定页面
+        self.poco("确定").click()
+    @staticmethod
+    def public_switch_tab(page_num):
         """
         切换页面：桌台信息1/订单信息2/会员信息3/点单二维码4/
         切换购物车/挂单/已付款tab：购物车5/已付款6/挂单7
         :return:
         """
+        time.sleep(0.5)
         if page_num == "1":
-            self.poco(text="桌台信息").click()
+            touch((132,545))
         elif page_num == "2":
-            self.poco(text="订单信息").click()
+            touch((380,545))
         elif page_num == "3":
-            self.poco(text="会员信息").click()
+            touch((640,545))
         elif page_num == "4":
-            self.poco(text="点单二维码").click()
+            touch(895,545)
         elif page_num == '5':
-            self.poco("com.wemew.teapro:id/tv_car_title").click()
+            touch((198,807))
         elif page_num == "6":
-            self.poco("com.wemew.teapro:id/tv_pay_title").click()
+            touch((524,807))
         elif page_num == '7':
-            self.poco("com.wemew.teapro:id/tv_not_pay_title").click()
+            touch((874,807))
         else:
             print("请切换存在正确的tab", page_num)
+        time.sleep(0.3)
 
-    @staticmethod
-    def public_buy_pay(pay_type):
+    def public_buy_pay(self,pay_type):
         """
         从购物车或者挂单页面，买单支付
         :return:
         """
+        time.sleep(0.5)
         if pay_type == "买单支付":
             touch(Template(r"photoes/tpl1745748594888.png", record_pos=(0.315, 0.986), resolution=(1080, 2400)))
         elif pay_type == '挂单':
-            touch(Template(r"photoes/tpl1745748605107.png", record_pos=(-0.004, 0.987), resolution=(1080, 2400)))
+            touch((538,2288))
+        elif pay_type == "支付":
+            self.poco("支付").click()
         else:
             print("请输入正确的买单支付类型:", pay_type)
+        time.sleep(1)
 
-    def public_total_discount(self, discount_type, phone_num="18982590424"):
+    def public_total_discount(self, discount_type, phone_num='18982590424'):
         """
         支付页面，选择折扣/优惠券/会员信息
         折扣/优惠券/会员信息
         :return:
         """
         time.sleep(1)
-        if discount_type == "折扣":
-            self.poco(text="折扣").click()
-            #指定金额比例
-            self.poco("com.wemew.teapro:id/et_1").set_text("10")
-            #折扣备注
-            self.poco("com.wemew.teapro:id/et_remark").set_text("ui自动化-折扣备注")
+        if discount_type == "打折":
+            self.poco(text="打折").click()
+            #按比例折扣 （8折）
+            touch((278,931))
+            text("8")
+            # 折扣备注（zk）
+            touch((204, 604))
+            text("UI自动化-折扣备注")
             #确认折扣
-            self.poco("com.wemew.teapro:id/tv_save_wine").click()
+            self.poco("确认").click()
         elif discount_type == "优惠券":
-            self.poco(text="优惠券").click()
-            self.poco("com.wemew.teapro:id/et_input_coupon").set_text("18982590424")
-            self.poco("com.wemew.teapro:id/tv_search_code").click()
-            self.poco("android.widget.FrameLayout").offspring("com.wemew.teapro:id/cl_top_select").offspring(
-                "com.wemew.teapro:id/fl_coupon_container").offspring("com.wemew.teapro:id/recycler_view").child(
-                "android.widget.FrameLayout")[0].offspring("com.wemew.teapro:id/iv_select").click()
-            touch(Template(r"photoes/tpl1745741509846.png", record_pos=(0.206, 0.946), resolution=(1080, 2400)))
+            self.poco("优惠券").click()
+            touch((239,730))
+            text(phone_num,search=True)
+            touch((998,906))
+            time.sleep(0.3)
         elif discount_type == "会员信息":
             # 选择会员信息
-            self.poco(text="会员信息").click()
-            self.poco("com.wemew.teapro:id/et_search").set_text(phone_num)
-            self.poco("com.wemew.teapro:id/tv_search").click()
-            touch(Template(r"photoes/tpl1745741249264.png", record_pos=(0.003, 0.986), resolution=(1080, 2400)))
+            self.poco("会员信息").click()
+            time.sleep(0.5)
+            touch((320,807))
+            text(phone_num,search=True)
+            self.poco("确认").click()
         time.sleep(1)
 
-    def public_refund(self, tab_page, num):
+    def public_refund(self, tab_page):
         """
         勾选商品，退品
         :param
-            staus(str):购物车/已付款/挂单
+            tab_page(str):购物车/已付款/挂单
             num(str):退品的种类数量
         :return:
         """
+        time.sleep(0.5)
         # 勾选商品
-        for i in range(0, int(num)):
-            self.poco("android.widget.FrameLayout").offspring("com.wemew.teapro:id/fl_background").offspring(
-                "com.wemew.teapro:id/view_pager").offspring("com.wemew.teapro:id/recycle_goods").child(
-                "com.wemew.teapro:id/cl_root_order")[i].offspring("com.wemew.teapro:id/iv_delete_goods").click()
+        touch((91,1040))
         # 退品
         if tab_page == "购物车":
             touch(Template(r"photoes/tpl1745748662436.png", record_pos=(-0.313, 0.988), resolution=(1080, 2400)))
         elif tab_page == "挂单" or tab_page == "已付款":
             touch(Template(r"photoes/tpl1745748757485.png", record_pos=(0.005, 0.99), resolution=(1080, 2400)))
             self.poco("com.wemew.teapro:id/tv_return_goods").click()
-
-    def public_close_tab(self):
+    @staticmethod
+    def public_close_tab():
         """
         关闭桌台详情页面
         :return:
         """
-        self.poco("android.widget.FrameLayout").offspring("com.wemew.teapro:id/fl_background").child(
-            "android.widget.LinearLayout").offspring("android.widget.ImageView").click()
+        touch((1028,550))
 
     def public_give_goods(self):
         """
@@ -303,50 +366,57 @@ class TablePage:
         :return:
         """
         # 加单品
-        self.poco(name="com.wemew.teapro:id/iv_increase", type="android.widget.ImageView").click()
+        touch((982,668))
+        touch((982,958))
         # 切换菜单
         self.poco(text="AUTO-套餐").click()
         # 加套餐
-        self.poco("com.wemew.teapro:id/iv_commodity").click()
-        touch(Template(r"photoes/tpl1743587579470.png", record_pos=(-0.028, 0.273), resolution=(1080, 2400)))
+        self.poco(text="全必选套餐").click()
+        self.poco("com.wemew.teapro:id/tv_add_car").click()
+        self.poco(text="必选+任选（普通套餐）").click()
+        touch((208,1038))
         # 添加任选商品
         for i in range(0, 4):
             # +号
-            touch((640, 1900))
-        # 加入赠送列表
-        touch(Template(r"photoes/tpl1745834140586.png", record_pos=(-0.086, 0.998), resolution=(1080, 2400)))
-        touch(Template(r"photoes/tpl1745749063985.png", record_pos=(0.291, 0.968), resolution=(1080, 2400)))
-        touch(Template(r"photoes/tpl1745749084244.png", record_pos=(0.306, 0.974), resolution=(1080, 2400)))
+            touch((307,1310))
+        self.poco("com.wemew.teapro:id/tv_add_car").click()
+        self.poco("com.wemew.teapro:id/tv_next").click()
+        time.sleep(0.5)
+        self.poco("com.wemew.teapro:id/tv_next").click()
+
 
     def public_use_coupon(self):
         """
         卡券核销
         :return:
         """
-        self.poco("com.wemew.teapro:id/et_input_coupon").set_text("18982590424")
-        self.poco("com.wemew.teapro:id/tv_search_gift").click()
-        self.poco("android.widget.FrameLayout").offspring("com.wemew.teapro:id/cl_top_select").offspring(
-            "com.wemew.teapro:id/cl_code").offspring("com.wemew.teapro:id/recycler_view").child(
-            "android.widget.FrameLayout")[0].child("com.wemew.teapro:id/tv_use").click()
-        self.poco("com.wemew.teapro:id/tv_set").click()
-        self.poco("com.wemew.teapro:id/tv_add_car").click()
-        self.poco("com.wemew.teapro:id/tv_submit").click()
+        #输入手机号
+        touch((246,801))
+        text("18982590424",search=True)
+        touch((1004,984))
+        #套餐选择
+        self.poco("套餐选择").click()
+        self.poco("确定").click()
+        self.poco("确定核销").click()
+        time.sleep(0.5)
 
     def public_group_purchase(self):
         """
         抖音美团  团购核销
         :return:
         """
-        self.poco("com.wemew.teapro:id/et_input_code").set_text("1573")
-        self.poco("com.wemew.teapro:id/tv_search_code").click()
-        touch(Template(r"photoes/tpl1745749230096.png", record_pos=(0.244, 0.984), resolution=(1080, 2400)))
+        touch((306,414))
+        text("123",search=True)
+        self.poco("确定核销").click()
 
     def public_book_table(self):
         """
         预订桌台
         :return:
         """
-        touch(Template(r"photoes/tpl1745749283330.png", record_pos=(-0.001, 0.981), resolution=(1080, 2400)))
+        time.sleep(1)
+        #下一步
+        self.poco("com.wemew.teapro:id/tv_save_wine").click()
         # 到店人数
         self.poco("com.wemew.teapro:id/etPeople").set_text("2")
         # 姓名
@@ -363,9 +433,7 @@ class TablePage:
         取消预订
         :return:
         """
-        # 搜索桌台
-        self.poco("com.wemew.teapro:id/et_search").set_text("9527")
-        touch(Template(r"photoes/tpl1745749309630.png", record_pos=(0.044, 0.262), resolution=(1080, 2400)))
+        self.poco("com.wemew.teapro:id/tv_cancel").click()
         # 确认取消
         self.poco(text="确定").click()
         # 返回首页
@@ -377,19 +445,13 @@ class TablePage:
         :return:
         """
         self.poco(text=menu_name).click()
-
-    def public_refresh_page(self):
+    @staticmethod
+    def public_refresh_page():
         """
         刷新首页
         :return:
         """
-        self.poco("android.widget.FrameLayout").child("android.widget.LinearLayout").offspring(
-            "android:id/content").offspring(
-            "com.wemew.teapro:id/app_bar_main").offspring("com.wemew.teapro:id/view_pager").child(
-            "android.widget.FrameLayout").child(
-            "android.widget.LinearLayout").offspring("com.wemew.teapro:id/recycler_view_tab").child(
-            "android.widget.FrameLayout")[1].offspring(
-            "com.wemew.teapro:id/ll_grey_block_root").swipe([0.0207, 0.3041])
+        swipe(v1=(507, 1285), v2=(507, 2127))
 
     def public_save_wine(self):
         """
@@ -526,7 +588,7 @@ class TablePage:
         self.poco("com.wemew.teapro:id/default_title_back").click()
         time.sleep(1)
 
-    def public_add_members(self):
+    def public_add_members(self,phone):
         """
         新增会员
         :return:
@@ -535,7 +597,7 @@ class TablePage:
         self.poco("com.wemew.teapro:id/iv_add").click()
         # 会员信息
         self.poco("com.wemew.teapro:id/et_1").set_text("ui自动化")
-        self.poco("com.wemew.teapro:id/et_2").set_text("199999999999")
+        self.poco("com.wemew.teapro:id/et_2").set_text(phone)
         self.poco("com.wemew.teapro:id/et_5").set_text("770099")
         self.poco("com.wemew.teapro:id/tv_select_vip_type").click()
         self.poco(text="默认卡类型").click()
@@ -551,8 +613,8 @@ class TablePage:
         :return:
         """
         self.poco("com.wemew.teapro:id/iv_search").click()
-        self.poco("com.wemew.teapro:id/et_search").set_text(phone)
-        touch((977, 2169))
+        touch((283,312))
+        text(text=phone,search=True)
 
     def public_operate_member(self, operate_type):
         """
@@ -592,7 +654,7 @@ class TablePage:
         # 充值备注
         self.poco("com.wemew.teapro:id/et_remark_recharge").set_text("ui自动化充值备注")
         # 确认充值
-        touch(Template(r"photoes/tpl1745750787289.png", record_pos=(0.225, 0.996), resolution=(1080, 2400)))
+        self.poco("com.wemew.teapro:id/tv_fix_table").click()
         time.sleep(2)
         # 截图充值记录里的充值金额
         # 对比两者金额是否一直
@@ -612,7 +674,7 @@ class TablePage:
         start_position = (width * x1, height * y1)
         end_position = (width * x2, height * y2)
         return start_position, end_position
-    def public_turn_table(self,turn_type,table_num):
+    def public_turn_table(self,turn_type,table_num=None):
         """
 
         :param table_num: 待转桌台号
@@ -620,11 +682,13 @@ class TablePage:
         :return:
         """
         if turn_type == "转台":
-            #选择M2转台--发起转台
-            self.public_click_table(table_num)
+            #找空闲桌台
+            table_num2 = self.poco("com.wemew.teapro:id/tv_tab_num")[0].get_text()
+            print("待转台台号:", table_num2)
+            self.public_click_table(table_num2)
             #确认转台
             self.poco("com.wemew.teapro:id/tv_next").click()
-            time.sleep(1)
+            return table_num2
         elif  turn_type == "联台":
             pass
         elif turn_type == "合并台":
@@ -651,14 +715,12 @@ class TablePage:
         if pay_type == "组合支付":
             self.poco(text="auto支付").click()
             self.poco(text="现金支付").click()
-            touch((399,916))
-            time.sleep(0.3)
-            touch((305,1708))
-            touch((538,2177))
-            touch((954,2166))
-            touch((971,2175))
+            touch((399,950))
+            text("100")
+            touch((923,2326))
         else:
             self.poco(text="auto支付").click()
+        time.sleep(0.5)
         self.poco("com.wemew.teapro:id/tv_pay_free").click()
         time.sleep(0.5)
         self.poco("com.wemew.teapro:id/tv_pay_free").click()
